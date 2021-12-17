@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const bcrypt = require('bcryptjs')
 const User = require('../users/users-model')
-const {tokenBuilder} = require('./auth-helpers')
+const { tokenBuilder } = require('./auth-helpers')
 
 const { BCRYPT_ROUNDS } = require('../../config')
 
@@ -18,7 +18,7 @@ router.post('/register', async (req, res, next) => {
     next(err)
   }
   // MW #1
-  // MW #2
+  // MW #2a
 });
 
 router.post('/login', (req, res, next) => {
@@ -27,19 +27,19 @@ router.post('/login', (req, res, next) => {
   User.findBy({ username })
     .then(([user]) => {
       if (user && bcrypt.compareSync(password, user.password)) {// successful login
-          const token = tokenBuilder(user)
-          res.status(200).json({
-            message: `welcome, ${user.username}`,
-            token
-          })
+        const token = tokenBuilder(user)
+        res.status(200).json({
+          message: `welcome, ${user.username}`,
+          token
+        })
       } else {
-        next({status: 401, message: "invalid credentials"})        
+        next({ status: 401, message: "invalid credentials" })
       }
     })
     .catch(next)
 
   // MW #1
-  // MW #2
+  // MW #2b
 })
 
 module.exports = router;
