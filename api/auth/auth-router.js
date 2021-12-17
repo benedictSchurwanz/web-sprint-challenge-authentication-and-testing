@@ -12,18 +12,11 @@ router.post('/register', async (req, res, next) => {
       password: bcrypt.hashSync(password, 8)
     }
     const created = await Users.add(newUser)
-    res.status(200).json({ username: created.username, id: created.id })
+    res.status(200).json({ id: created.id, username: created.username, password: created.password })
   } catch (err) {
     next(err)
   }
 
-  //   2- On SUCCESSFUL registration,
-  //     the response body should have `id`, `username` and `password`:
-  //     {
-  //       "id": 1,
-  //       "username": "Captain Marvel",
-  //       "password": "2a$08$jG.wIGR2S4hxuyWNcBf9MuoC4y0dNy7qC/LbmtuFBSdIhWks2LhpG"
-  //     }
 
   //   3- On FAILED registration due to `username` or `password` missing from the request body,
   //     the response body should include a string exactly as follows: "username and password required".
