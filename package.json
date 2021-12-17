@@ -8,8 +8,8 @@
     "migrate": "knex migrate:latest",
     "seed": "knex seed:run",
     "rollback": "knex migrate:rollback",
-    "reset": "npm run rollback && npm run migrate",
-    "hardreset": "rm -f data/*.db3 && npm run migrate",
+    "reset": "npm run rollback && npm run migrate && npm run seed",
+    "hardreset": "rm -f data/*.db3 && npm run migrate && npm run seed",
     "test": "cross-env NODE_ENV=testing jest --verbose --runInBand --silent"
   },
   "repository": {
