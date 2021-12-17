@@ -1,32 +1,36 @@
-const router = require('express').Router();
+const router = require('express').Router(); // require(express) & router = express.Router
+const bcrypt = require('bcryptjs')
+const Users = require('../users/users-model')
 
-router.post('/register', (req, res) => {
-  res.end('implement register, please!');
-  /*
-    IMPLEMENT
-    You are welcome to build additional middlewares to help with the endpoint's functionality.
-    DO NOT EXCEED 2^8 ROUNDS OF HASHING!
+/* eslint-disable */
 
-    1- In order to register a new account the client must provide `username` and `password`:
-      {
-        "username": "Captain Marvel", // must not exist already in the `users` table
-        "password": "foobar"          // needs to be hashed before it's saved
-      }
+router.post('/register', async (req, res, next) => {
+  try {
+    const { username, password } = req.body
+    const newUser = {
+      username,
+      password: bcrypt.hashSync(password, 8)
+    }
+    const created = await Users.add(newUser)
+    res.status(200).json({ username: created.username, id: created.id })
+  } catch (err) {
+    next(err)
+  }
 
-    2- On SUCCESSFUL registration,
-      the response body should have `id`, `username` and `password`:
-      {
-        "id": 1,
-        "username": "Captain Marvel",
-        "password": "2a$08$jG.wIGR2S4hxuyWNcBf9MuoC4y0dNy7qC/LbmtuFBSdIhWks2LhpG"
-      }
+  //   2- On SUCCESSFUL registration,
+  //     the response body should have `id`, `username` and `password`:
+  //     {
+  //       "id": 1,
+  //       "username": "Captain Marvel",
+  //       "password": "2a$08$jG.wIGR2S4hxuyWNcBf9MuoC4y0dNy7qC/LbmtuFBSdIhWks2LhpG"
+  //     }
 
-    3- On FAILED registration due to `username` or `password` missing from the request body,
-      the response body should include a string exactly as follows: "username and password required".
+  //   3- On FAILED registration due to `username` or `password` missing from the request body,
+  //     the response body should include a string exactly as follows: "username and password required".
 
-    4- On FAILED registration due to the `username` being taken,
-      the response body should include a string exactly as follows: "username taken".
-  */
+  //   4- On FAILED registration due to the `username` being taken,
+  //     the response body should include a string exactly as follows: "username taken".
+  // */
 });
 
 router.post('/login', (req, res) => {
