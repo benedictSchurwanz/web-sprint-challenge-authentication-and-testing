@@ -1,13 +1,16 @@
-const router = require('express').Router(); // require(express) & router = express.Router
+const router = require('express').Router()
 const bcrypt = require('bcryptjs')
 const User = require('../users/users-model')
+const {tokenBuilder} = require('./auth-helpers')
+
+const { BCRYPT_ROUNDS } = require('../../config')
 
 router.post('/register', async (req, res, next) => {
   try {
     const { username, password } = req.body
     const newUser = {
       username,
-      password: bcrypt.hashSync(password, 8)
+      password: bcrypt.hashSync(password, BCRYPT_ROUNDS)
     }
     const created = await User.add(newUser)
     res.status(200).json({ id: created.id, username: created.username, password: created.password })
@@ -20,15 +23,20 @@ router.post('/register', async (req, res, next) => {
 
 router.post('/login', (req, res, next) => {
   const { username, password } = req.body;
-  
-  console.log(User.findBy({username}));
 
-  // 2- On SUCCESSFUL login,
-  //   the response body should have `message` and `token`:
-  //   {
-  //     "message": "welcome, Captain Marvel",
-  //     "token": "eyJhbGciOiJIUzI ... ETC ... vUPjZYDSa46Nwz8"
-  //   }
+  User.findBy({ username })
+    .then(([user]) => {
+      if (user && bcrypt.compareSync(password, user.password)) {// successful login
+          const token = tokenBuilder(user)
+          res.status(201).json({
+            "message": `welcome, ${user.username}`,
+            "token": [token]
+          })
+      } else {
+        next({status: 401, message: "invalid credentials"})        
+      }
+    })
+    .catch(next)
 
   // MW #1
   // MW #2
