@@ -19,6 +19,9 @@ afterAll(async () => {
 	await db.destroy()
 })
 
+it('correct environment', () => {
+	expect(process.env.NODE_ENV).toBe('testing')
+})
 
 describe('Register', () => {
 	let response
