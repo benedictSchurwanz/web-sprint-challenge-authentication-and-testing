@@ -24,9 +24,7 @@ it('correct environment', () => {
 })
 
 describe('Register', () => {
-	// let response
 	const pw = encryptPassword("mcboatface")
-	// const pw = "mcboatface"
 	const un = "boaty"
 
 	it('model can add user', async () => {
@@ -36,11 +34,4 @@ describe('Register', () => {
 		
 		expect(newUser).toMatchObject({id: 1, username: un, password: pw})
 	})
-	
-	// it('register request successful', async () => {
-	// 	response = await request(server)
-	// 		.post('api/auth/register')
-	// 		.send({ username: un, password: pw })
-	// 	expect(response.username).toEqual(un)
-	// })
 })
