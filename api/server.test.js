@@ -24,7 +24,7 @@ it('correct environment', () => {
 })
 
 describe('Register', () => {
-	let response
+	// let response
 	const pw = encryptPassword("mcboatface")
 	// const pw = "mcboatface"
 	const un = "boaty"
