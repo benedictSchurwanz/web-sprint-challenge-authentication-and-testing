@@ -22,7 +22,8 @@ afterAll(async () => {
 
 describe('Register', () => {
 	let response
-	const pw = encryptPassword("mcboatface")
+	// const pw = encryptPassword("mcboatface")
+	const pw = "mcboatface"
 	const un = "boaty"
 
 	beforeAll(async () => {
