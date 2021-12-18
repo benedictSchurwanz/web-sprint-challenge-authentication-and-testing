@@ -1,8 +1,8 @@
 const request = require('supertest')
 const server = require('./server')
 const db = require('../data/dbConfig')
-
-
+const { encryptPassword } = require('./auth/auth-helpers')
+const User = require('./users/users-model')
 
 describe('sanity', () => {
 	it('at least one test exists', () => {
@@ -10,13 +10,9 @@ describe('sanity', () => {
 	})
 })
 
-beforeAll(async ()=> {
+beforeAll(async () => {
 	await db.migrate.rollback()
 	await db.migrate.latest()
-})
-
-beforeEach(async () => {
-	await db.seed.run()
 })
 
 afterAll(async () => {
@@ -25,12 +21,17 @@ afterAll(async () => {
 
 
 describe('Register', () => {
-  let res
+	let response
+	const pw = encryptPassword("mcboatface")
+	const un = "boaty"
+
 	beforeAll(async () => {
-		res = await request(server).post('/api/auth/register').send({username: ""})
+		response = await request(server)
+			.post('api/auth/register')
+			.send({ username: un, password: pw })
 	})
-	
+
 	it('model can add a user', async () => {
-				
+		expect(response.username).toEqual(un)
 	})
 })
