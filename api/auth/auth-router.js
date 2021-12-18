@@ -1,15 +1,14 @@
 const router = require('express').Router()
 const bcrypt = require('bcryptjs')
 const User = require('../users/users-model')
-const { tokenBuilder } = require('./auth-helpers')
-const { BCRYPT_ROUNDS } = require('../../config')
+const { tokenBuilder, encryptPassword } = require('./auth-helpers')
 
 router.post('/register', async (req, res, next) => {
   try {
     const { username, password } = req.body
     const newUser = {
       username,
-      password: bcrypt.hashSync(password, BCRYPT_ROUNDS)
+      password: encryptPassword(password)
     }
     const created = await User.add(newUser)
     res.status(200).json({ id: created.id, username: created.username, password: created.password })
