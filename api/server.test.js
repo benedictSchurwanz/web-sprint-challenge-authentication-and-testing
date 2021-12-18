@@ -25,17 +25,22 @@ it('correct environment', () => {
 
 describe('Register', () => {
 	let response
-	// const pw = encryptPassword("mcboatface")
-	const pw = "mcboatface"
+	const pw = encryptPassword("mcboatface")
+	// const pw = "mcboatface"
 	const un = "boaty"
 
-	beforeAll(async () => {
-		response = await request(server)
-			.post('api/auth/register')
-			.send({ username: un, password: pw })
+	it('model can add user', async () => {
+		await User.add({username: un, password: pw})
+		
+		const [newUser] = await db('users').where('id', 1)
+		
+		expect(newUser).toMatchObject({id: 1, username: un, password: pw})
 	})
-
-	it('model can add a user', async () => {
-		expect(response.username).toEqual(un)
-	})
+	
+	// it('register request successful', async () => {
+	// 	response = await request(server)
+	// 		.post('api/auth/register')
+	// 		.send({ username: un, password: pw })
+	// 	expect(response.username).toEqual(un)
+	// })
 })
